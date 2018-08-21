@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-
+// import Content from './components/Content'
 Vue.use(Router)
 
 export default new Router({
@@ -11,7 +11,12 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      children: [{
+        path: '/:id',
+        name: 'content',
+        component: () => import(/* webpackChunkName: "about" */ './components/Content.vue')
+      }]
     },
     {
       path: '/about',
