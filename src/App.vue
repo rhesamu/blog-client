@@ -11,7 +11,7 @@
         <button class="btn btn-primary ml-2">Login</button>
       </div>
     </nav>
-    <div class="container-fluid" style="margin-top: 80px">
+    <div class="container" style="margin-top: 80px">
       <router-view />
     </div>
   </div>
@@ -37,4 +37,5 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>
