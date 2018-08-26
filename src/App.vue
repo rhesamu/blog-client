@@ -4,18 +4,48 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-      <router-link to="/" class="navbar-brand">Blog</router-link>
-      <div class="collapse navbar-collapse">
-        <button class="btn btn-primary ml-auto">Add post</button>
-        <button class="btn btn-primary ml-2">Login</button>
-      </div>
-    </nav>
+    <Navbar 
+      :isLogin="isLogin"
+      @logout="logout"
+    />
     <div class="container" style="margin-top: 80px">
       <router-view />
     </div>
   </div>
 </template>
+
+<script>
+import Navbar from '@/components/Navbar.vue'
+export default {
+  components: {
+    Navbar
+  },
+  data () {
+    return {
+      isLogin: false
+    }
+  },
+  watch: {
+    isLogin (value) {
+      this.isLogin = value
+      console.log('isLogin value changed -->', value)
+    }
+  },
+  methods: {
+    logout () {
+      localStorage.removeItem('blog-token')
+      this.isLogin = false
+    }
+  },
+  created () {
+    let token = localStorage.getItem('blog-token')
+    if (token) {
+      this.isLogin = true
+    }
+  }
+}
+</script>
+
 
 <style>
 #app {

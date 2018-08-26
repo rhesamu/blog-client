@@ -15,25 +15,36 @@ export default new Router({
       children: [{
         path: '/:id',
         name: 'content',
-        component: () => import(/* webpackChunkName: "about" */ './components/Content.vue'),
+        component: () => import(/* webpackChunkName: "content" */ './components/Content.vue'),
         props: true
       }]
     },
     {
-      path: '/login',
-      name: 'login'
+      path: '/user/login',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
     },
     {
-      path: '/register',
-      name: 'register'
+      path: '/user/register',
+      name: 'register',
+      component: () => import(/* webpackChunkName: "register" */ './views/Register.vue')
     },
     {
-      path: '/add',
-      name: 'add'
+      path: '/article/add',
+      name: 'addArticle',
+      component: () => import(/* webpackChunkName: "addPost" */ './views/AddArticle.vue'),
+      beforeEnter: (to, from, next) => {
+        let token = localStorage.getItem('blog-token')
+        if (token) {
+          next()
+        } else {
+          next('/')
+        }
+      }
     },
     {
-      path: '/edit',
-      name: 'edit'
+      path: '/article/edit',
+      name: 'editArticle'
     }
   ]
 })
