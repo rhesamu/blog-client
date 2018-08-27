@@ -8,6 +8,10 @@
         <a v-for="(tag, idx) in article.tags" :key="idx" href="#" class="badge badge-primary mr-1">{{ tag }}</a>
       </h6>
     </div>
+    <div v-if="isAuthor">
+      <button class="btn btn-primary">Edit</button>
+      <button class="btn btn-danger ml-1">Delete</button>
+    </div>
     <hr>
     <div>
       <p>{{ article.content }}</p>
@@ -15,7 +19,9 @@
 
     <Comments
       :comments="comments"
+      :currentUserId="currentUserId"
       @add-comment="addComment"
+      @delete-comment="deleteComment"
     />
   </section>
 </template>
@@ -33,6 +39,8 @@ export default {
       param: this.$route.params.id,
       article: {},
       comments: null,
+      isAuthor: false,
+      currentUserId: null,
       baseUrl: 'http://localhost:3000'
     }
   },
@@ -43,7 +51,9 @@ export default {
       url: `${self.baseUrl}/articles/${self.$route.params.id}`
     })
     .then(({ data }) => {
+      console.log(data)
       self.article = data
+      self.getUserInfo(data.author._id)
     })
     .catch(err => {
       console.log(err.response)
@@ -70,7 +80,6 @@ export default {
   watch: {
     '$route' (to, from) {
       // react to route changes...
-      // console.log('hehe')
       this.param = this.$route.params.id
 
       let self = this
@@ -79,7 +88,9 @@ export default {
         url: `${self.baseUrl}/articles/${self.param}`
       })
       .then(({ data }) => {
+        // console.log(data)
         self.article = data
+        self.getUserInfo(data.author._id)
       })
       .catch(err => {
         console.log(err.response)
@@ -89,6 +100,25 @@ export default {
     }
   },
   methods: {
+    getUserInfo (userId) {
+      let self = this
+      let token = localStorage.getItem('blog-token')
+      axios({
+        method: 'get',
+        url: `${self.baseUrl}/user/`,
+        headers: { token }
+      })
+      .then(({ data }) => {
+        self.currentUserId = data._id
+        if (userId == data._id) { 
+          self.isAuthor = true 
+        } 
+        else { 
+          self.isAuthor = false 
+        }
+      })
+      .catch(({ response }) => self.isAuthor = false )
+    },
     getComments () {
       let self = this
       axios({
@@ -96,7 +126,7 @@ export default {
         url: `${self.baseUrl}/comments/${self.param}`
       })
       .then(({ data }) => {
-        console.log(data)
+        // console.log(data)
         self.comments = data.comments
       })
       .catch(({ response }) => {
@@ -117,10 +147,27 @@ export default {
       })
       .then(({ data }) => {
         self.getComments()
-        console.log('add comment')
+        // console.log('add comment')
       })
       .catch(({ response }) => {
         console.log('error -->', response)
+      })
+    },
+    deleteComment (value) {
+      let self = this
+      let token = localStorage.getItem('blog-token')
+      axios({
+        method: 'delete',
+        url: `${self.baseUrl}/comments/`,
+        headers: { token },
+        data: { commentId: value.commentId }
+      })
+      .then(({ data }) => {
+        self.getComments()
+      })
+      .catch(({ response }) => {
+        console.log('delete failed')
+        console.log(response)
       })
     }
   }
@@ -136,5 +183,3 @@ p {
   line-height: 2em;
 }
 </style>
-
-

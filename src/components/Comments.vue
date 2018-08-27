@@ -25,7 +25,10 @@
               <p class="mb-1">{{ comment.content }}</p>
               <small>{{ comment.createdAt | filterDate }}</small>
             </div>
-            <small>{{ comment.userId.name }}</small>
+            <small>{{ comment.userId.name }}</small><br>
+            <div v-if="comment.userId._id == currentUserId">
+              <button @click="deleteComment(comment._id)" class="btn btn-danger">Delete</button>
+            </div>
           </li>
         </div>
       </div>
@@ -37,7 +40,7 @@
 import axios from 'axios'
 
 export default {
-  props: ['comments'],
+  props: ['comments', 'currentUserId'],
   data () {
     return {
       baseUrl: 'http://localhost:3000',
@@ -73,6 +76,11 @@ export default {
     addComment (event) {
       this.$emit('add-comment', {
         content: this.content
+      })
+    },
+    deleteComment (commentId) {
+      this.$emit('delete-comment', {
+        commentId
       })
     }
   }

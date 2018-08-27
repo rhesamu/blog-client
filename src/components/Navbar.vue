@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <router-link to="/" class="navbar-brand">Blog</router-link>
+    <router-link to="/" class="navbar-brand">Wordpush</router-link>
     <div class="collapse navbar-collapse">
       <div class="ml-auto">
         <input @keyup.enter="search" type="text" class="form-control" placeholder="Search">
