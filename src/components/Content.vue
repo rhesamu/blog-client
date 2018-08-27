@@ -7,32 +7,40 @@
       <h6>Tags: 
         <a v-for="(tag, idx) in article.tags" :key="idx" href="#" class="badge badge-primary mr-1">{{ tag }}</a>
       </h6>
-      <div>
-        
-      </div>
     </div>
     <hr>
     <div>
       <p>{{ article.content }}</p>
     </div>
+
+    <Comments
+      :comments="comments"
+      @add-comment="addComment"
+    />
   </section>
 </template>
 
 <script>
 import axios from 'axios'
+import Comments from '@/components/Comments.vue'
 
 export default {
+  components: {
+    Comments
+  },
   data () {
     return {
       param: this.$route.params.id,
-      article: {}
+      article: {},
+      comments: null,
+      baseUrl: 'http://localhost:3000'
     }
   },
   created () {
     let self = this
     axios({
       method: 'get',
-      url: `http://localhost:3000/articles/${self.$route.params.id}`
+      url: `${self.baseUrl}/articles/${self.$route.params.id}`
     })
     .then(({ data }) => {
       self.article = data
@@ -40,6 +48,8 @@ export default {
     .catch(err => {
       console.log(err.response)
     })
+
+    self.getComments()
   },
   filters: {
     filterDate (value) {
@@ -66,13 +76,51 @@ export default {
       let self = this
       axios({
         method: 'get',
-        url: `http://localhost:3000/articles/${self.param}`
+        url: `${self.baseUrl}/articles/${self.param}`
       })
       .then(({ data }) => {
         self.article = data
       })
       .catch(err => {
         console.log(err.response)
+      })
+
+      self.getComments()
+    }
+  },
+  methods: {
+    getComments () {
+      let self = this
+      axios({
+        method: 'get',
+        url: `${self.baseUrl}/comments/${self.param}`
+      })
+      .then(({ data }) => {
+        console.log(data)
+        self.comments = data.comments
+      })
+      .catch(({ response }) => {
+        console.log('comments error -->', response)
+      })
+    },
+    addComment (value) {
+      let self = this
+      let token = localStorage.getItem('blog-token')
+      axios({
+        method: 'post',
+        url: `${self.baseUrl}/comments/`,
+        headers: { token },
+        data: {
+          articleId: self.param,
+          content: value.content
+        }
+      })
+      .then(({ data }) => {
+        self.getComments()
+        console.log('add comment')
+      })
+      .catch(({ response }) => {
+        console.log('error -->', response)
       })
     }
   }
