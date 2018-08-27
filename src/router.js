@@ -43,6 +43,19 @@ export default new Router({
       }
     },
     {
+      path: '/article/edit/:id',
+      name: 'editArticle',
+      component: () => import(/* webpackChunkName: "addPost" */ './views/EditArticle.vue'),
+      beforeEnter: (to, from, next) => {
+        let token = localStorage.getItem('blog-token')
+        if (token) {
+          next()
+        } else {
+          next('/')
+        }
+      }
+    },
+    {
       path: '/article/edit',
       name: 'editArticle'
     }

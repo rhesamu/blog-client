@@ -9,8 +9,8 @@
       </h6>
     </div>
     <div v-if="isAuthor">
-      <button class="btn btn-primary">Edit</button>
-      <button class="btn btn-danger ml-1">Delete</button>
+      <router-link :to="'/article/edit/'+ param" class="btn btn-primary">Edit</router-link>
+      <button @click="deleteArticle" class="btn btn-danger ml-1">Delete</button>
     </div>
     <hr>
     <div>
@@ -169,6 +169,20 @@ export default {
         console.log('delete failed')
         console.log(response)
       })
+    },
+    deleteArticle () {
+      let self = this
+      let token = localStorage.getItem('blog-token')
+      axios({
+        method: 'delete',
+        url: `${self.baseUrl}/articles/${self.param}`,
+        headers: { token }
+      })
+      .then(({ data }) => {
+        alert('Post deleted')
+        this.router.push('/')
+      })
+      .catch(({ response }) => console.log(response))
     }
   }
 }
