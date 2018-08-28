@@ -13,8 +13,8 @@
       <button @click="deleteArticle" class="btn btn-danger ml-1">Delete</button>
     </div>
     <hr>
-    <div>
-      <p>{{ article.content }}</p>
+    <div style="margin-top: 2em; margin-bottom: 2em;">
+      <span v-html="article.content"></span>
     </div>
 
     <Comments
@@ -41,7 +41,7 @@ export default {
       comments: null,
       isAuthor: false,
       currentUserId: null,
-      baseUrl: 'http://localhost:3000'
+      baseUrl: 'http://35.240.129.41'
     }
   },
   created () {

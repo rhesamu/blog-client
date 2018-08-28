@@ -9,8 +9,7 @@
               <input v-model="title" type="text" class="form-control" placeholder="Title">
             </div>
             <div class="form-group">
-              <textarea v-model="content" rows="3" class="form-control" placeholder="Say what you need to say...">
-              </textarea>
+              <wysiwyg v-model="content" />
             </div>
             <div class="form-group">
               <input v-model="tags" type="text" class="form-control" placeholder="Add tags (separate by space)">
@@ -34,7 +33,7 @@ export default {
       title: '',
       content: '',
       tags: '',
-      baseUrl: 'http://localhost:3000',
+      baseUrl: 'http://35.240.129.41',
       param: this.$route.params.id
     }
   },

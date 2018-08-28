@@ -58,7 +58,7 @@ export default {
     let self = this
     axios({
       method: 'get',
-      url: 'http://localhost:3000/articles'
+      url: 'http://35.240.129.41/articles'
     })
     .then(({ data }) => {
       self.articles = data

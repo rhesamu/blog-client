@@ -37,7 +37,7 @@ export default {
       email: '',
       password: '',
       errorMsg: '',
-      baseUrl: 'http://localhost:3000'
+      baseUrl: 'http://35.240.129.41'
     }
   },
   methods: {
